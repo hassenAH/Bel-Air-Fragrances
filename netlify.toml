@@ -8,3 +8,5 @@
 
 # Environment variables are NOT stored here (they hold secrets). Set them in
 # Netlify: Site configuration -> Environment variables. See README "Deploy on Netlify".
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_BRAND_NAME"
