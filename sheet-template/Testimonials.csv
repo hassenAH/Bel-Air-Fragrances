@@ -1,0 +1,2 @@
+name,rating,text,active
+Example customer,5,"This is an example. Replace it with a real review, then set active to TRUE.",FALSE

@@ -1,0 +1,7 @@
+id,name,price,size,stock,image,description,top_notes,heart_notes,base_notes,active
+noir-ambre-30,Noir Ambre,59,30ml,20,,"A warm, resinous amber wrapped in smoked vanilla.",Bergamot; Pink pepper,Amber; Rose,Vanilla; Sandalwood,TRUE
+noir-ambre-50,Noir Ambre,89,50ml,12,,"A warm, resinous amber wrapped in smoked vanilla.",Bergamot; Pink pepper,Amber; Rose,Vanilla; Sandalwood,TRUE
+noir-ambre-100,Noir Ambre,129,100ml,8,,"A warm, resinous amber wrapped in smoked vanilla.",Bergamot; Pink pepper,Amber; Rose,Vanilla; Sandalwood,TRUE
+jardin-blanc-30,Jardin Blanc,49,30ml,18,,"Fresh white florals with a soft musky trail.",Neroli; Pear,Jasmine; Peony,White musk; Cedar,TRUE
+jardin-blanc-50,Jardin Blanc,79,50ml,15,,"Fresh white florals with a soft musky trail.",Neroli; Pear,Jasmine; Peony,White musk; Cedar,TRUE
+oud-royal-50,Oud Royal,149,50ml,5,,"Deep oud and leather for evenings.",Saffron; Cardamom,Oud; Leather,Patchouli; Incense,TRUE

@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Third-party minified files copied into /public
+    "public/draco/**",
+    // Plain Node scripts (CommonJS test harness), not part of the website
+    "scripts/**",
   ]),
 ]);
 

@@ -1,0 +1,3 @@
+code,percent,expires,max_uses,uses,used,used_at,order_id
+EXAMPLE10,10,2027-12-31,,,FALSE,,
+EXAMPLE-SHARED,15,2027-12-31,100,0,,,
