@@ -148,23 +148,6 @@ const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 const smooth = (x: number) => x * x * (3 - 2 * x);
 const easeInOut = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
 
-/** Soft round gradient used for the golden halo and the floor shadow. */
-function radialTexture(rgb: string, centerAlpha: number) {
-  const size = 256;
-  const canvas = document.createElement("canvas");
-  canvas.width = canvas.height = size;
-  const ctx = canvas.getContext("2d")!;
-  const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-  g.addColorStop(0, `rgba(${rgb},${centerAlpha})`);
-  g.addColorStop(0.45, `rgba(${rgb},${centerAlpha * 0.35})`);
-  g.addColorStop(1, `rgba(${rgb},0)`);
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, size, size);
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
-}
-
 /**
  * One bottle, two homes. The page has two empty "slots" (data-bottle-slot="hero" and "about").
  * Every frame this measures where they are on the PAGE and moves the bottle between them as the
@@ -201,12 +184,10 @@ function Rig({
     return { model: clone, offset: box.getCenter(new THREE.Vector3()).negate() };
   }, [scene, brand, lite]);
 
-  const glowTex = useMemo(() => radialTexture("217,150,50", 0.75), []);
-  const shadowTex = useMemo(() => radialTexture("60,40,20", 0.6), []);
-
   const root = useRef<THREE.Group>(null); // position + scale
   const spinner = useRef<THREE.Group>(null); // rotation
   const halo = useRef<THREE.Mesh>(null);
+  const ring = useRef<THREE.Mesh>(null);
   const shadow = useRef<THREE.Mesh>(null);
   const sparkles = useRef<THREE.Group>(null);
   const slots = useRef<{ hero: HTMLElement | null; about: HTMLElement | null }>({ hero: null, about: null });
@@ -289,25 +270,33 @@ function Rig({
     );
     spin.position.y = Math.sin(clock.current * 1.2) * 0.04; // idle float
 
-    // Arrival effects: golden halo and sparkles grow in as it lands.
+    // Arrival effects (flat colours only, no gradients): a gold disc and a thin ring open up behind the
+    // bottle as it lands, and the ring gently breathes. Sparkles grow in too.
     const arrive = smooth(clamp01((t - 0.65) / 0.35));
     const haloMat = halo.current?.material as THREE.MeshBasicMaterial | undefined;
-    if (haloMat) haloMat.opacity = 0.9 * arrive;
-    if (halo.current) halo.current.scale.setScalar(0.75 + 0.25 * arrive + Math.sin(clock.current * 1.4) * 0.02);
+    if (haloMat) haloMat.opacity = 0.2 * arrive;
+    if (halo.current) halo.current.scale.setScalar(0.7 + 0.3 * arrive);
+    const ringMat = ring.current?.material as THREE.MeshBasicMaterial | undefined;
+    if (ringMat) ringMat.opacity = 0.85 * arrive;
+    if (ring.current) ring.current.scale.setScalar(0.7 + 0.3 * arrive + Math.sin(clock.current * 1.6) * 0.015);
     sparkles.current?.scale.setScalar(Math.max(0.001, arrive));
     const shadowMat = shadow.current?.material as THREE.MeshBasicMaterial | undefined;
-    if (shadowMat) shadowMat.opacity = 0.35 * introE;
+    if (shadowMat) shadowMat.opacity = 0.16 * introE;
   });
 
   return (
     <group ref={root}>
       <mesh ref={halo} position={[0, 0, -0.8]}>
-        <planeGeometry args={[5.6, 5.6]} />
-        <meshBasicMaterial map={glowTex} transparent opacity={0} depthWrite={false} />
+        <circleGeometry args={[2.1, 96]} />
+        <meshBasicMaterial color="#d99632" transparent opacity={0} depthWrite={false} />
       </mesh>
-      <mesh ref={shadow} position={[0, -1.55, -0.3]} scale={[1.7, 0.26, 1]}>
-        <circleGeometry args={[1, 48]} />
-        <meshBasicMaterial map={shadowTex} transparent opacity={0} depthWrite={false} />
+      <mesh ref={ring} position={[0, 0, -0.75]}>
+        <ringGeometry args={[2.3, 2.36, 128]} />
+        <meshBasicMaterial color="#a8895a" transparent opacity={0} depthWrite={false} />
+      </mesh>
+      <mesh ref={shadow} position={[0, -1.55, -0.3]} scale={[1.5, 0.2, 1]}>
+        <circleGeometry args={[1, 64]} />
+        <meshBasicMaterial color="#3c2814" transparent opacity={0} depthWrite={false} />
       </mesh>
       <group ref={sparkles} scale={0.001}>
         {level === 0 && <Sparkles count={70} scale={[2.6, 3.6, 1.8]} size={5} speed={0.35} opacity={1} color="#c8962e" />}

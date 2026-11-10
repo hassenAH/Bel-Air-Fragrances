@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { ProductImage } from "@/components/bottle";
 import { SmartImage } from "@/components/smart-image";
 import type { Product } from "@/lib/types";
@@ -63,14 +64,14 @@ export function ProductGallery({ product }: { product: Product }) {
               onClick={() => go(index - 1)}
               className="absolute top-1/2 left-2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-background/80 text-lg backdrop-blur transition hover:bg-background"
             >
-              ‹
+              <CaretLeft size={20} weight="bold" aria-hidden />
             </button>
             <button
               aria-label="Next image"
               onClick={() => go(index + 1)}
               className="absolute top-1/2 right-2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-background/80 text-lg backdrop-blur transition hover:bg-background"
             >
-              ›
+              <CaretRight size={20} weight="bold" aria-hidden />
             </button>
             <p
               className="absolute right-3 bottom-3 rounded-full bg-background/80 px-2.5 py-0.5 text-xs backdrop-blur"

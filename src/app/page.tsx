@@ -1,6 +1,17 @@
 import Link from "next/link";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  CaretDoubleDown,
+  FlowerLotus,
+  Fire,
+  Star,
+  Tree,
+  Wind,
+  XCircle,
+} from "@phosphor-icons/react/dist/ssr";
 import { BottleSvg, ProductImage } from "@/components/bottle";
-import { AboutSection, ReviewsSection } from "@/components/home-sections";
+import { AboutSection, BenefitsStrip, Ornament, ReviewsSection } from "@/components/home-sections";
 import { BottleSlot, BottleStage } from "@/components/motion/bottle-stage";
 import { ScrollScope } from "@/components/motion/scroll-scope";
 import { getCatalog } from "@/lib/catalog";
@@ -9,9 +20,9 @@ import { CARD_WIDTH } from "@/lib/layout";
 import { groupProducts, type ProductGroup } from "@/lib/variants";
 
 const ACTS = [
-  { n: "01", title: "Top notes", text: "The first impression. Bright and volatile, it greets you in the first few minutes." },
-  { n: "02", title: "Heart notes", text: "The soul of the fragrance. It blooms as the top fades and stays for hours." },
-  { n: "03", title: "Base notes", text: "The lasting trail. Warm, deep and soft on skin long after you have left the room." },
+  { n: "01", Icon: Wind, title: "Top notes", text: "The first impression. Bright and volatile, it greets you in the first few minutes." },
+  { n: "02", Icon: FlowerLotus, title: "Heart notes", text: "The soul of the fragrance. It blooms as the top fades and stays for hours." },
+  { n: "03", Icon: Tree, title: "Base notes", text: "The lasting trail. Warm, deep and soft on skin long after you have left the room." },
 ];
 
 // This page is prebuilt (the catalog is cached), so its content is already in the HTML when it arrives:
@@ -19,7 +30,7 @@ const ACTS = [
 // skeleton until they arrive (see components/smart-image.tsx). Do not wrap these sections in <Suspense>:
 // the scroll animations would then touch them before React has attached to them (hydration warning).
 export default async function Home() {
-  const { products, content, testimonials, demo } = await getCatalog();
+  const { products, content, testimonials, demo, settings } = await getCatalog();
   const groups = groupProducts(products);
 
   return (
@@ -38,13 +49,34 @@ export default async function Home() {
               <p data-hero-in className="mx-auto mt-5 max-w-md text-muted md:mx-0">
                 {TAGLINE}
               </p>
-              <a
-                data-hero-in
-                href="#collection"
-                className="mt-8 inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase transition hover:bg-foreground hover:text-background"
-              >
-                Shop the collection
-              </a>
+
+              {/* Social proof first: the real Google rating from your Sheet (shown only when you have set it). */}
+              {content.googleRating !== null && (
+                <a
+                  data-hero-in
+                  href="#reviews"
+                  className="mt-6 inline-flex items-center gap-2 rounded-full border border-line bg-background px-4 py-2 text-sm transition hover:border-accent"
+                >
+                  <Star size={18} weight="fill" className="text-accent" aria-hidden />
+                  <strong>{content.googleRating.toFixed(1)}</strong>
+                  <span className="text-muted">
+                    on Google{content.googleReviewsCount ? ` · ${content.googleReviewsCount} reviews` : ""}
+                  </span>
+                </a>
+              )}
+
+              <div data-hero-in className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 md:justify-start">
+                <a
+                  href="#collection"
+                  className="group inline-flex items-center gap-3 bg-foreground px-8 py-4 text-sm tracking-widest text-background uppercase transition hover:bg-accent-dark"
+                >
+                  Shop the collection
+                  <ArrowRight size={18} weight="bold" className="transition group-hover:translate-x-1" aria-hidden />
+                </a>
+                <a href="#about" className="py-4 text-sm tracking-widest uppercase underline-offset-8 transition hover:text-accent-dark hover:underline">
+                  Our story
+                </a>
+              </div>
             </div>
             <div data-hero-in className="order-1 md:order-2">
               <BottleSlot
@@ -58,31 +90,53 @@ export default async function Home() {
               />
             </div>
           </div>
+
+          {/* "Scroll" cue: nudges down, jumps to the About section */}
+          <a
+            data-hero-in
+            href="#about"
+            aria-label="Scroll to About us"
+            className="mx-auto mb-8 hidden w-fit flex-col items-center gap-1 text-[11px] tracking-[0.35em] text-muted uppercase transition hover:text-accent-dark md:flex"
+          >
+            Scroll
+            <CaretDoubleDown size={18} weight="bold" className="nudge" aria-hidden />
+          </a>
         </section>
 
         <AboutSection content={content} />
       </BottleStage>
 
+      <BenefitsStrip settings={settings} content={content} />
+
       <section className="mx-auto max-w-6xl px-5 py-20">
-        <h2 data-reveal className="font-display mb-12 text-center text-4xl md:text-5xl">
+        <h2 data-reveal className="font-display mb-6 text-center text-4xl md:text-5xl">
           Three acts, one fragrance
         </h2>
-        <div className="grid gap-10 md:grid-cols-3">
+        <Ornament />
+        <div className="grid gap-6 md:grid-cols-3">
           {ACTS.map((a) => (
-            <div key={a.n} data-reveal className="border-t border-line pt-6">
-              <p className="font-display text-5xl text-accent">{a.n}</p>
-              <h3 className="font-display mt-2 text-2xl">{a.title}</h3>
+            <div
+              key={a.n}
+              data-reveal
+              className="group border border-line bg-card p-8 text-center transition duration-300 hover:-translate-y-1 hover:border-accent"
+            >
+              <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#f3ead9] text-accent-dark transition group-hover:bg-accent group-hover:text-background">
+                <a.Icon size={34} weight="duotone" aria-hidden />
+              </span>
+              <p className="font-display mt-5 text-sm tracking-[0.3em] text-accent">{a.n}</p>
+              <h3 className="font-display mt-1 text-3xl">{a.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-muted">{a.text}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section id="collection" className="border-t border-line bg-white/50">
+      <section id="collection" className="scroll-mt-20 border-t border-line bg-white/50">
         <div className="mx-auto max-w-6xl px-5 py-20">
-          <h2 data-reveal className="font-display mb-12 text-center text-4xl md:text-5xl">
+          <h2 data-reveal className="font-display mb-6 text-center text-4xl md:text-5xl">
             The collection
           </h2>
+          <Ornament />
           {groups.length === 0 ? (
             <p className="text-center text-muted">New fragrances are coming soon.</p>
           ) : (
@@ -126,6 +180,26 @@ function ProductCard({ group }: { group: ProductGroup }) {
               className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100"
             />
           )}
+
+          {/* Stock badges: real numbers from the Sheet */}
+          {inStock.length === 0 && (
+            <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 bg-foreground px-3 py-1.5 text-[11px] tracking-widest text-background uppercase">
+              <XCircle size={14} weight="fill" aria-hidden /> Sold out
+            </span>
+          )}
+          {inStock.length > 0 && inStock.some((v) => v.stock <= 5) && (
+            <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 bg-accent px-3 py-1.5 text-[11px] tracking-widest text-background uppercase">
+              <Fire size={14} weight="fill" aria-hidden /> Low stock
+            </span>
+          )}
+
+          {/* "View" button appears on hover/focus */}
+          <span
+            aria-hidden
+            className="absolute right-3 bottom-3 flex h-11 w-11 translate-y-2 items-center justify-center rounded-full bg-background text-foreground opacity-0 shadow-lg transition duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+          >
+            <ArrowUpRight size={20} weight="bold" />
+          </span>
         </div>
         <h3 className="font-display mt-4 text-xl">{name}</h3>
         <p className="text-sm text-muted">{variants.map((v) => v.size).join(" · ")}</p>

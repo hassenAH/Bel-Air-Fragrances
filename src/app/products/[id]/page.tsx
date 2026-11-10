@@ -31,14 +31,14 @@ export default function ProductPage({ params }: PageProps<"/products/[id]">) {
 async function ProductDetail({ params }: { params: PageProps<"/products/[id]">["params"] }) {
   const { id: rawId } = await params;
   const id = decodeURIComponent(rawId);
-  const { products } = await getCatalog();
+  const { products, settings } = await getCatalog();
   const variants = variantsOf(products, id);
   if (variants.length === 0) notFound();
 
   return (
     <ScrollScope>
       {/* key: a different size id in the URL (e.g. from a link) starts with that size selected */}
-      <ProductView key={id} variants={variants} initialId={id} />
+      <ProductView key={id} variants={variants} initialId={id} freeDeliveryOver={settings.freeDeliveryOver} />
     </ScrollScope>
   );
 }

@@ -32,25 +32,77 @@ body {
   font-family: var(--font-cormorant), Georgia, serif;
 }
 
-/* Skeleton placeholder: a soft beige block with a light band sweeping across it. */
-@keyframes skeleton-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
+/* Skeleton placeholder: a flat beige block that gently pulses (flat colours only, no gradients). */
+@keyframes skeleton-pulse {
+  0%,
   100% {
-    background-position: -200% 0;
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
   }
 }
 
 .skeleton {
-  background-color: #ebe3d4;
-  background-image: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+  background-color: #e6dcc9;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+/* Announcement ticker: the row is duplicated in the markup, so sliding by half its width loops seamlessly. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee {
+  animation: marquee 34s linear infinite;
+}
+
+.marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Cart badge: a quick "pop" each time the number changes. */
+@keyframes badge-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.45);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.badge-pop {
+  animation: badge-pop 0.35s ease-out;
+}
+
+/* A gentle up-and-down nudge for the "scroll" cue. */
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+.nudge {
+  animation: nudge 1.6s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .skeleton {
+  .skeleton,
+  .marquee,
+  .badge-pop,
+  .nudge {
     animation: none;
   }
 }

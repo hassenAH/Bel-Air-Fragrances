@@ -16,7 +16,7 @@ export function ProductImage({ product, className = "" }: { product: Product; cl
     );
   }
   return (
-    <div className={`flex h-full w-full items-center justify-center bg-linear-to-b from-[#f1e9dc] to-[#e4d6bd] ${className}`}>
+    <div className={`flex h-full w-full items-center justify-center bg-[#efe6d6] ${className}`}>
       <BottleSvg label={`${product.name} bottle`} />
     </div>
   );

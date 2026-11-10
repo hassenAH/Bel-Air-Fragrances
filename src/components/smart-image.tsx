@@ -30,7 +30,7 @@ export function SmartImage({
     return (
       <span
         aria-hidden={hidden}
-        className={`${wrapperClassName} flex items-center justify-center bg-linear-to-b from-[#f1e9dc] to-[#e4d6bd]`}
+        className={`${wrapperClassName} flex items-center justify-center bg-[#efe6d6]`}
       >
         <BottleSvg label={alt} />
       </span>

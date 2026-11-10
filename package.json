@@ -8,11 +8,12 @@
     "start": "next start",
     "lint": "eslint",
     "preview:email": "node --env-file-if-exists=.env.local scripts/preview-emails.cjs apps-script/Code.gs",
-    "test:script":"node scripts/test-apps-script.cjs apps-script/Code.gs",
-    "check:sheet":"node --env-file-if-exists=.env.local scripts/check-sheet.mjs"
+    "test:script": "node scripts/test-apps-script.cjs apps-script/Code.gs",
+    "check:sheet": "node --env-file-if-exists=.env.local scripts/check-sheet.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@phosphor-icons/react": "^2.1.10",
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.2",
     "gsap": "^3.15.1",

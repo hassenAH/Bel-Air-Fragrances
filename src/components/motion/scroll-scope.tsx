@@ -25,6 +25,8 @@ export function ScrollScope({ children }: { children: React.ReactNode }) {
     () => {
       const el = root.current;
       if (!el) return;
+      // ?motion=off in the address bar skips every scroll animation (static page, handy for testing).
+      if (new URLSearchParams(window.location.search).get("motion") === "off") return;
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
