@@ -5,6 +5,7 @@ import { BottleSlot, BottleStage } from "@/components/motion/bottle-stage";
 import { ScrollScope } from "@/components/motion/scroll-scope";
 import { getCatalog } from "@/lib/catalog";
 import { BRAND, TAGLINE, formatPrice } from "@/lib/config";
+import { CARD_WIDTH } from "@/lib/layout";
 import { groupProducts, type ProductGroup } from "@/lib/variants";
 
 const ACTS = [
@@ -13,6 +14,10 @@ const ACTS = [
   { n: "03", title: "Base notes", text: "The lasting trail. Warm, deep and soft on skin long after you have left the room." },
 ];
 
+// This page is prebuilt (the catalog is cached), so its content is already in the HTML when it arrives:
+// there is nothing to "load". What does load afterwards are the photos, which show a shimmering
+// skeleton until they arrive (see components/smart-image.tsx). Do not wrap these sections in <Suspense>:
+// the scroll animations would then touch them before React has attached to them (hydration warning).
 export default async function Home() {
   const { products, content, testimonials, demo } = await getCatalog();
   const groups = groupProducts(products);
@@ -21,41 +26,41 @@ export default async function Home() {
     <ScrollScope>
       {/* Hero + About share one 3D canvas: the bottle flies from the hero into the About frame as you scroll. */}
       <BottleStage>
-      <section data-hero className="border-b border-line">
-        <div className="mx-auto grid max-w-6xl items-center gap-4 px-5 py-10 md:grid-cols-2 md:py-16">
-          <div data-hero-text className="order-2 text-center md:order-1 md:text-left">
-            <p data-hero-in className="mb-4 text-xs tracking-[0.35em] text-accent-dark uppercase">
-              Eau de parfum
-            </p>
-            <h1 data-hero-in className="font-display text-5xl leading-[1.05] font-medium md:text-7xl">
-              {BRAND}
-            </h1>
-            <p data-hero-in className="mx-auto mt-5 max-w-md text-muted md:mx-0">
-              {TAGLINE}
-            </p>
-            <a
-              data-hero-in
-              href="#collection"
-              className="mt-8 inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase transition hover:bg-foreground hover:text-background"
-            >
-              Shop the collection
-            </a>
+        <section data-hero className="border-b border-line">
+          <div className="mx-auto grid max-w-6xl items-center gap-4 px-5 py-10 md:grid-cols-2 md:py-16">
+            <div data-hero-text className="order-2 text-center md:order-1 md:text-left">
+              <p data-hero-in className="mb-4 text-xs tracking-[0.35em] text-accent-dark uppercase">
+                Eau de parfum
+              </p>
+              <h1 data-hero-in className="font-display text-5xl leading-[1.05] font-medium md:text-7xl">
+                {BRAND}
+              </h1>
+              <p data-hero-in className="mx-auto mt-5 max-w-md text-muted md:mx-0">
+                {TAGLINE}
+              </p>
+              <a
+                data-hero-in
+                href="#collection"
+                className="mt-8 inline-block border border-foreground px-8 py-3 text-sm tracking-widest uppercase transition hover:bg-foreground hover:text-background"
+              >
+                Shop the collection
+              </a>
+            </div>
+            <div data-hero-in className="order-1 md:order-2">
+              <BottleSlot
+                name="hero"
+                className="relative h-[380px] w-full md:h-[560px]"
+                fallback={
+                  <div className="flex h-full w-full items-center justify-center">
+                    <BottleSvg label={`${BRAND} perfume bottle`} />
+                  </div>
+                }
+              />
+            </div>
           </div>
-          <div data-hero-in className="order-1 md:order-2">
-            <BottleSlot
-              name="hero"
-              className="relative h-[380px] w-full md:h-[560px]"
-              fallback={
-                <div className="flex h-full w-full items-center justify-center">
-                  <BottleSvg label={`${BRAND} perfume bottle`} />
-                </div>
-              }
-            />
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <AboutSection content={content} />
+        <AboutSection content={content} />
       </BottleStage>
 
       <section className="mx-auto max-w-6xl px-5 py-20">
@@ -107,11 +112,7 @@ function ProductCard({ group }: { group: ProductGroup }) {
   const target = inStock[0] ?? variants[0];
 
   return (
-    // Column widths for a 1.25rem gap: 2 columns on phones, 3 on tablets, 4 on large screens.
-    <li
-      data-reveal
-      className="w-[calc((100%_-_1.25rem)/2)] md:w-[calc((100%_-_2.5rem)/3)] lg:w-[calc((100%_-_3.75rem)/4)]"
-    >
+    <li data-reveal className={CARD_WIDTH}>
       <Link href={`/products/${encodeURIComponent(target.id)}`} className="group block">
         <div className="relative aspect-3/4 overflow-hidden border border-line bg-card">
           <ProductImage product={photo} className="transition duration-700 group-hover:scale-105" />

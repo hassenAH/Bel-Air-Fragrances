@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ProductView } from "@/components/product-view";
 import { ScrollScope } from "@/components/motion/scroll-scope";
+import { ProductSkeleton } from "@/components/skeletons";
 import { getCatalog } from "@/lib/catalog";
 import { variantsOf } from "@/lib/variants";
 
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: PageProps<"/products/[id]">):
 
 export default function ProductPage({ params }: PageProps<"/products/[id]">) {
   return (
-    <Suspense fallback={<div className="mx-auto max-w-5xl px-5 py-16 text-muted">Loading…</div>}>
+    <Suspense fallback={<ProductSkeleton />}>
       <ProductDetail params={params} />
     </Suspense>
   );

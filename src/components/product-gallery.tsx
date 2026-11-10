@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { ProductImage } from "@/components/bottle";
+import { SmartImage } from "@/components/smart-image";
 import type { Product } from "@/lib/types";
 
 /** Main image + thumbnails. Swipe on touch screens, arrows and thumbnails everywhere. */
@@ -44,17 +45,14 @@ export function ProductGallery({ product }: { product: Product }) {
       >
         {/* All images are stacked so switching is an instant cross-fade. */}
         {images.map((src, i) => (
-          // eslint-disable-next-line @next/next/no-img-element -- image URLs come from the Sheet and can be any host
-          <img
+          <SmartImage
             key={src}
             src={src}
             alt={`${label} (${i + 1} of ${images.length})`}
-            loading={i === 0 ? "eager" : "lazy"}
-            draggable={false}
-            aria-hidden={i !== index}
-            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
-              i === index ? "opacity-100" : "opacity-0"
-            }`}
+            eager={i === 0}
+            hidden={i !== index}
+            className="h-full w-full object-cover"
+            wrapperClassName={`absolute inset-0 block transition-opacity duration-300 ${i === index ? "opacity-100" : "opacity-0"}`}
           />
         ))}
 
@@ -96,8 +94,7 @@ export function ProductGallery({ product }: { product: Product }) {
                   i === index ? "border-foreground" : "border-line opacity-70 hover:opacity-100"
                 }`}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element -- Sheet-provided URL */}
-                <img src={src} alt="" loading="lazy" draggable={false} className="h-full w-full object-cover" />
+                <SmartImage src={src} alt="" className="h-full w-full object-cover" />
               </button>
             </li>
           ))}
