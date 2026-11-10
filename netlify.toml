@@ -5,8 +5,7 @@
 [build.environment]
   # Next.js 16 needs Node 20.9 or newer.
   NODE_VERSION = "22"
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_BRAND_NAME"
 
 # Environment variables are NOT stored here (they hold secrets). Set them in
 # Netlify: Site configuration -> Environment variables. See README "Deploy on Netlify".
-[build.environment]
-  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_BRAND_NAME"
