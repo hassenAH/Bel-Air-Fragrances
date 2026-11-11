@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { createContext, useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { BRAND, HERO_BG } from "@/lib/config";
+import { Splash } from "./splash";
 
 // Three.js is large: load it only in the browser, only on the page that needs it.
 const BottleScene = dynamic(() => import("./bottle-scene"), { ssr: false });
@@ -66,6 +67,8 @@ export function BottleStage({ children }: { children: React.ReactNode }) {
 
   return (
     <StageContext.Provider value={{ enabled, ready }}>
+      {/* Covers the page until the 3D bottle is ready (see splash.tsx). */}
+      <Splash enabled={enabled} ready={ready} />
       {/* No overflow-hidden here: it would break the sticky canvas. */}
       <div ref={root} className="relative" style={{ background: HERO_BG }}>
         {enabled && (

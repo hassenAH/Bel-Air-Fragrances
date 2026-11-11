@@ -2,7 +2,7 @@
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import * as THREE from "three";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer, PerformanceMonitor, Sparkles, useGLTF } from "@react-three/drei";
 import { HERO_BG } from "@/lib/config";
 
@@ -196,9 +196,23 @@ function Rig({
   const clock = useRef(0);
   const intro = useRef(0);
 
+  // "Ready" for the home page loader = model downloaded AND its shaders compiled AND two frames drawn, so the loader
+  // lifts onto a bottle that is already showing and moving, not one that is still stuttering into place.
+  const { gl, scene: threeScene, camera } = useThree();
   useEffect(() => {
-    onReady();
-  }, [onReady]);
+    let cancelled = false;
+    const finish = () => {
+      if (cancelled) return;
+      // A background tab never paints (no animation frames), so don't wait for them there.
+      if (document.visibilityState === "hidden") return onReady();
+      // two animation frames: the first real frames have been painted
+      requestAnimationFrame(() => requestAnimationFrame(() => !cancelled && onReady()));
+    };
+    Promise.resolve(gl.compileAsync(threeScene, camera)).then(finish, finish);
+    return () => {
+      cancelled = true;
+    };
+  }, [gl, threeScene, camera, onReady]);
 
   // The canvas never receives pointer events (it sits behind the page text), so track the mouse on the window.
   useEffect(() => {

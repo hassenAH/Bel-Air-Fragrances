@@ -32,8 +32,25 @@ export function ScrollScope({ children }: { children: React.ReactNode }) {
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         // Intro
         const intro = el.querySelectorAll("[data-hero-in]");
+        // The home page has a loader on top (components/motion/splash.tsx): the intro waits until it lifts.
+        let stopWaiting: (() => void) | undefined;
         if (intro.length) {
-          gsap.from(intro, { autoAlpha: 0, y: 28, duration: 1, stagger: 0.14, ease: "power3.out", delay: 0.1 });
+          const loader = document.getElementById("splash");
+          const waiting = !!loader && loader.dataset.phase === "show";
+          const tween = gsap.from(intro, {
+            autoAlpha: 0,
+            y: 28,
+            duration: 1,
+            stagger: 0.14,
+            ease: "power3.out",
+            delay: waiting ? 0.3 : 0.1,
+            paused: waiting,
+          });
+          if (waiting) {
+            const go = () => tween.play();
+            window.addEventListener("splash-done", go, { once: true });
+            stopWaiting = () => window.removeEventListener("splash-done", go);
+          }
         }
 
         // Hero copy drifts up and fades as you scroll away
@@ -92,6 +109,8 @@ export function ScrollScope({ children }: { children: React.ReactNode }) {
               gsap.to(batch, { autoAlpha: 1, y: 0, duration: 0.9, stagger: 0.12, ease: "power3.out", overwrite: true }),
           });
         }
+
+        return () => stopWaiting?.();
       });
 
       return () => mm.revert();

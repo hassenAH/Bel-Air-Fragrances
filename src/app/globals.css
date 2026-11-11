@@ -98,11 +98,77 @@ body {
   animation: nudge 1.6s ease-in-out infinite;
 }
 
+/* Home page loader (components/motion/splash.tsx). It lifts like a curtain once the 3D bottle is ready. */
+.splash {
+  transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+  /* Safety net: if JavaScript never runs, the loader hides itself instead of covering the page for ever. */
+  animation: splash-failsafe 0s linear 9s forwards;
+}
+
+.splash[data-phase="leaving"] {
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
+.splash-content {
+  transition: opacity 0.35s ease;
+}
+
+.splash[data-phase="leaving"] .splash-content {
+  opacity: 0;
+}
+
+@keyframes splash-failsafe {
+  to {
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+@keyframes splash-fill {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(10%);
+  }
+}
+
+.splash-liquid {
+  transform-box: fill-box;
+  transform: translateY(100%);
+  animation: splash-fill 2.6s cubic-bezier(0.3, 0.6, 0.3, 1) forwards;
+}
+
+.splash[data-phase="leaving"] .splash-liquid {
+  animation: none;
+  transform: translateY(0);
+}
+
+@keyframes splash-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+
+.splash-bar {
+  animation: splash-slide 1.3s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .skeleton,
   .marquee,
   .badge-pop,
-  .nudge {
+  .nudge,
+  .splash-liquid,
+  .splash-bar {
     animation: none;
+  }
+  .splash,
+  .splash-content {
+    transition: none;
   }
 }
