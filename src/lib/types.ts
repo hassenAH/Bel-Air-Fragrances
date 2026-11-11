@@ -37,6 +37,16 @@ export type SiteContent = {
   googleRating: number | null;
   googleReviewsCount: number | null;
   googleMapsUrl: string;
+  /** Search / share texts (blank = built from the brand and tagline). */
+  seoTitle: string;
+  seoDescription: string;
+  /** Picture shown when the link is shared (blank = the generated card). */
+  seoImage: string;
+  instagramUrl: string;
+  facebookUrl: string;
+  tiktokUrl: string;
+  /** Shown to Google as the shop's phone number. */
+  phone: string;
 };
 
 /** What the Apps Script returns: `content` is the raw Settings key -> text map. */

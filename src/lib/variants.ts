@@ -30,6 +30,12 @@ export function groupProducts(products: Product[]): ProductGroup[] {
   return [...map.values()].map((g) => ({ ...g, variants: [...g.variants].sort(bySize) }));
 }
 
+/**
+ * The one size whose address stands for the whole product (canonical link, sitemap):
+ * the smallest size that is in stock, else the smallest size.
+ */
+export const canonicalVariant = (variants: Product[]): Product => variants.find((v) => v.stock > 0) ?? variants[0];
+
 /** All sizes of the product that contains `id`, smallest first. Empty if `id` is unknown. */
 export function variantsOf(products: Product[], id: string): Product[] {
   const p = products.find((x) => x.id === id);

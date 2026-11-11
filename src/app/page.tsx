@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -18,6 +19,8 @@ import { getCatalog } from "@/lib/catalog";
 import { BRAND, TAGLINE, formatPrice } from "@/lib/config";
 import { CARD_WIDTH } from "@/lib/layout";
 import { groupProducts, type ProductGroup } from "@/lib/variants";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const ACTS = [
   { n: "01", Icon: Wind, title: "Top notes", text: "The first impression. Bright and volatile, it greets you in the first few minutes." },

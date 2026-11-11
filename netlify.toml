@@ -5,7 +5,10 @@
 [build.environment]
   # Next.js 16 needs Node 20.9 or newer.
   NODE_VERSION = "22"
-  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_BRAND_NAME"
+  # NEXT_PUBLIC_* values are public on purpose: Next.js writes them into the pages it builds. If one of them is
+  # marked "secret" in Netlify, the secrets scanner finds it in the build output and fails the build. This list
+  # tells the scanner to ignore them. (Never add APPS_SCRIPT_SECRET here: that one must never appear in the output.)
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_BRAND_NAME,NEXT_PUBLIC_TAGLINE,NEXT_PUBLIC_CURRENCY,NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,NEXT_PUBLIC_BING_SITE_VERIFICATION"
 
 # Environment variables are NOT stored here (they hold secrets). Set them in
 # Netlify: Site configuration -> Environment variables. See README "Deploy on Netlify".

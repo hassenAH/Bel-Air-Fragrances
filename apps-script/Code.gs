@@ -6,7 +6,8 @@
  *   Orders   : order_id | date | status | name | phone | email | city | address | items | subtotal | delivery | total | notes | coupon | discount
  *   Settings : key | value          (optional: delivery_fee, free_delivery_over, and the home page texts:
  *              about_title, about_text, about_image, reviews_title, reviews_summary,
- *              google_rating, google_reviews_count, google_maps_url)
+ *              google_rating, google_reviews_count, google_maps_url, and for search engines / sharing:
+ *              seo_title, seo_description, seo_image, instagram_url, facebook_url, tiktok_url, contact_phone)
  *   Testimonials : name | rating | text | active     (customer reviews shown on the home page)
  *   Coupons  : code | percent | expires | max_uses | uses | used | used_at | order_id     (% off codes)
  *              percent = plain number (10 = 10% off the products). expires = last valid day (blank = never).
@@ -84,7 +85,8 @@ function getSettings_() {
  * Only these keys are ever sent to the website; blank values are skipped.
  */
 var CONTENT_KEYS = ['about_title', 'about_text', 'about_image', 'reviews_title', 'reviews_summary',
-  'google_rating', 'google_reviews_count', 'google_maps_url'];
+  'google_rating', 'google_reviews_count', 'google_maps_url',
+  'seo_title', 'seo_description', 'seo_image', 'instagram_url', 'facebook_url', 'tiktok_url', 'contact_phone'];
 
 function getContent_() {
   var out = {};

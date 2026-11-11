@@ -46,6 +46,13 @@ export function parseContent(raw: unknown): SiteContent {
     googleRating: rating(r.google_rating),
     googleReviewsCount: count(r.google_reviews_count),
     googleMapsUrl: safeUrl(r.google_maps_url),
+    seoTitle: text(r.seo_title, 70),
+    seoDescription: text(r.seo_description, 300),
+    seoImage: safeUrl(r.seo_image, { allowPath: true }),
+    instagramUrl: safeUrl(r.instagram_url),
+    facebookUrl: safeUrl(r.facebook_url),
+    tiktokUrl: safeUrl(r.tiktok_url),
+    phone: text(r.contact_phone, 30).replace(/[^\d+()\-.\s]/g, ""),
   };
 }
 

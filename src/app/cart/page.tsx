@@ -3,7 +3,8 @@ import { ShoppingBagOpen } from "@phosphor-icons/react/dist/ssr";
 import { CartView } from "@/components/cart-view";
 import { getCatalog } from "@/lib/catalog";
 
-export const metadata: Metadata = { title: "Cart & checkout" };
+// A personal page: no reason for it to show up in search results.
+export const metadata: Metadata = { title: "Cart & checkout", robots: { index: false, follow: true } };
 
 export default async function CartPage() {
   const { products, settings } = await getCatalog();

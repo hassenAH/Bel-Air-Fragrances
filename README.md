@@ -80,6 +80,9 @@ Common causes: `.env.local` is missing or empty (the site then runs in demo mode
    | `NEXT_PUBLIC_BRAND_NAME` | `Bel Air Fragrances` | |
    | `NEXT_PUBLIC_CURRENCY` | `TND` | |
    | `NEXT_PUBLIC_TAGLINE` | optional | |
+   | `NEXT_PUBLIC_SITE_URL` | your own domain, e.g. `https://belair.tn` | only once you have one (see *SEO*); without it the Netlify address is used |
+
+   **Build failed on "secrets scanning"?** Netlify blocks a build when a variable marked *secret* appears in the pages it produces, and `NEXT_PUBLIC_…` values always do (they are public on purpose). [`netlify.toml`](netlify.toml) already tells the scanner to skip them (`SECRETS_SCAN_OMIT_KEYS`); you can also simply un-tick *Contains secret values* on those variables. Only `APPS_SCRIPT_SECRET` should be secret.
 
    Without the first two the site runs in demo mode (a red "Demo mode: this order was NOT saved" notice appears after an order).
 4. **Deploy.** Every later `git push` redeploys automatically.
@@ -91,6 +94,37 @@ Common causes: `.env.local` is missing or empty (the site then runs in demo mode
 6. **Your own domain** (optional): Site configuration → Domain management → Add a domain.
 
 If a deploy fails with an error about caching or `use cache`, that is the Next.js `cacheComponents` setting in `next.config.ts` not being supported by Netlify's runtime yet. Send me the build log.
+
+## SEO (Google, sharing)
+
+What the site does by itself, with nothing to set up:
+
+- **Each page has its own title, description and share card.** Products read like *Noir Ambre Eau de Parfum 30ml, 50ml* and use the product photo when a link is shared on WhatsApp, Facebook, X or iMessage. The home page uses a generated card (`opengraph-image`) in your colours.
+- **One address per product.** The 30/50/100 ml sizes share one page in search results (`canonical` link), so Google doesn't see three copies.
+- **`/sitemap.xml` and `/robots.txt`** are generated from your Products tab. The cart and `/api` are kept out of Google.
+- **Structured data for Google** (JSON-LD): the shop (name, logo, social pages, phone), and for every product its price, sizes and in-stock / out-of-stock state, so results can show the price. No fake star ratings are added.
+- **Icons**: tab icon, iPhone home-screen icon and a web manifest.
+- **A friendly 404 page.** An unknown product link shows it and tells Google not to index it.
+- **Deploy previews are hidden from Google** (`noindex` + `Disallow: /`), so a test copy never competes with the real shop. Only the production site is indexable.
+
+Things to do once the site is live:
+
+1. **Set the real address.** Add your domain in Netlify, then set `NEXT_PUBLIC_SITE_URL=https://yourdomain` (no slash at the end) and redeploy. Without it the `….netlify.app` address is used.
+2. **Optional texts in the Settings tab** (all blank = sensible defaults). These need the latest [`apps-script/Code.gs`](apps-script/Code.gs) pasted and redeployed as a **New version**:
+
+   | key | what to put |
+   |---|---|
+   | `seo_title` | the home page title in Google, up to about 60 characters, e.g. `Bel Air Fragrances — Perfume in Tunis` |
+   | `seo_description` | the text under the title in Google, up to about 155 characters |
+   | `seo_image` | an `https://` picture (1200×630 works best) used when the home page is shared |
+   | `instagram_url`, `facebook_url`, `tiktok_url` | your pages: shown as icons in the footer and given to Google |
+   | `contact_phone` | the shop phone, e.g. `+216 20 000 000`, given to Google |
+
+3. **Google Search Console** (free): add your site, then *Sitemaps → submit* `sitemap.xml`. Either verify with the *HTML tag* method and put the code in the `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` variable (Bing: `NEXT_PUBLIC_BING_SITE_VERIFICATION`), or use the DNS method and skip the variables.
+4. **Check it**: the [Rich Results Test](https://search.google.com/test/rich-results) on a product page, and share a link to yourself on WhatsApp to see the card.
+5. **Google Business Profile** matters most for a local shop: keep your Maps listing, address and opening hours complete, and put your website on it. Pages are prebuilt so they are fast; keep product photos under ~300 KB.
+
+Good to know: new sites take days to weeks to appear in Google, and no setting can speed that up. The Products → `description` text is what people read in search results, so write a real sentence for each product.
 
 ## Animation and 3D
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MapPin, Money, PhoneCall, Truck } from "@phosphor-icons/react/dist/ssr";
+import { FacebookLogo, InstagramLogo, MapPin, Money, PhoneCall, TiktokLogo, Truck } from "@phosphor-icons/react/dist/ssr";
 import { getCatalog } from "@/lib/catalog";
 import { BRAND, TAGLINE, formatPrice } from "@/lib/config";
 
@@ -14,6 +14,13 @@ export async function SiteFooter() {
     ...(hasReviews ? [{ href: "/#reviews", label: "Reviews" }] : []),
     { href: "/cart", label: "Your cart" },
   ];
+
+  // Social pages from the Sheet (Settings tab); only the ones that are filled in are shown.
+  const socials = [
+    { href: content.instagramUrl, label: "Instagram", Icon: InstagramLogo },
+    { href: content.facebookUrl, label: "Facebook", Icon: FacebookLogo },
+    { href: content.tiktokUrl, label: "TikTok", Icon: TiktokLogo },
+  ].filter((s) => s.href);
 
   const promises = [
     { Icon: Money, text: "Pay in cash when your parcel arrives" },
@@ -39,6 +46,23 @@ export async function SiteFooter() {
             >
               <MapPin size={20} weight="fill" aria-hidden /> Find us on Google Maps
             </a>
+          )}
+          {socials.length > 0 && (
+            <ul className="mt-5 flex gap-3">
+              {socials.map(({ href, label, Icon }) => (
+                <li key={label}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer me"
+                    aria-label={`${BRAND} on ${label}`}
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-background/25 transition hover:border-accent hover:text-accent"
+                  >
+                    <Icon size={22} weight="fill" aria-hidden />
+                  </a>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
 

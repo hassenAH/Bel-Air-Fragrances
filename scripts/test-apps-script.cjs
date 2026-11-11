@@ -544,6 +544,8 @@ test("content: only the known keys are sent (nothing else in Settings leaks), tr
       ["about_title", "  Our story  "], ["ABOUT_TEXT", "Line one\n\nLine two"], ["about_image", ""],
       ["google_rating", 4.8], ["google_reviews_count", 127], ["google_maps_url", "https://maps.app.goo.gl/abc"],
       ["reviews_summary", "Clients love it."], ["reviews_title", "What they say"],
+      ["SEO_TITLE", "Perfume in Tunis"], ["seo_description", "Fine fragrances."], ["instagram_url", "https://instagram.com/x"],
+      ["contact_phone", "+216 20 000 000"],
       ["api_secret", "TOP-SECRET"], ["owner_email", "me@x.com"], ["something_else", "x"],
     ],
   });
@@ -551,6 +553,8 @@ test("content: only the known keys are sent (nothing else in Settings leaks), tr
   assert.deepStrictEqual(c, {
     about_title: "Our story", about_text: "Line one\n\nLine two", google_rating: "4.8", google_reviews_count: "127",
     google_maps_url: "https://maps.app.goo.gl/abc", reviews_summary: "Clients love it.", reviews_title: "What they say",
+    seo_title: "Perfume in Tunis", seo_description: "Fine fragrances.", instagram_url: "https://instagram.com/x",
+    contact_phone: "+216 20 000 000",
   });
   assert.ok(!JSON.stringify(catalog(w)).includes("TOP-SECRET"));
 });
